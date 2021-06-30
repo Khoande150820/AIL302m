@@ -16,7 +16,6 @@ def get_prediction(model):
     for img in os.listdir(TEST_DIR):
         plt.figure()
         print(img)
-        raw_img = plt.imread(os.path.join(TEST_DIR,img))
         X = cv2.resize(cv2.imread(os.path.join(TEST_DIR, img), cv2.IMREAD_GRAYSCALE), (50, 50))
         X = np.array(X)
         X = X / 255
@@ -26,8 +25,7 @@ def get_prediction(model):
         predictions = predictions.reshape(-1)
         predictions = int(predictions)
         label = PREDICT_LABEL[predictions]
-        plt.imshow(raw_img)
-        plt.legend(label)
+        print(label)
 
 
 
