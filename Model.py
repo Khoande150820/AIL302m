@@ -18,7 +18,6 @@ class Model:
     def add(self, layer):
         self.layers.append(layer)
 
-
     # Set loss, optimizer and accuracy
     def set(self, *, loss=None, optimizer=None, accuracy=None):
 
@@ -50,21 +49,20 @@ class Model:
             # the previous layer object is the input layer
             if i == 0:
                 self.layers[i].prev = self.input_layer
-                self.layers[i].next = self.layers[i+1]
+                self.layers[i].next = self.layers[i + 1]
 
             # All layers except for the first and the last
             elif i < layer_count - 1:
-                self.layers[i].prev = self.layers[i-1]
-                self.layers[i].next = self.layers[i+1]
+                self.layers[i].prev = self.layers[i - 1]
+                self.layers[i].next = self.layers[i + 1]
 
             # The last layer - the next object is the loss
             # Also let's save aside the reference to the last object
             # whose output is the model's output
             else:
-                self.layers[i].prev = self.layers[i-1]
+                self.layers[i].prev = self.layers[i - 1]
                 self.layers[i].next = self.loss
                 self.output_layer_activation = self.layers[i]
-
 
             # If layer contains an attribute called "weights",
             # it's a trainable layer -
@@ -99,9 +97,8 @@ class Model:
             if train_steps * batch_size < len(X):
                 train_steps += 1
 
-
         # Main training loop
-        for epoch in range(1, epochs+1):
+        for epoch in range(1, epochs + 1):
 
             # Print epoch number
             print(f'epoch: {epoch}')
@@ -121,8 +118,8 @@ class Model:
 
                 # Otherwise slice a batch
                 else:
-                    batch_X = X[step*batch_size:(step+1)*batch_size]
-                    batch_y = y[step*batch_size:(step+1)*batch_size]
+                    batch_X = X[step * batch_size:(step + 1) * batch_size]
+                    batch_y = y[step * batch_size:(step + 1) * batch_size]
 
                 # Perform the forward pass
                 output = self.forward(batch_X, training=True)
@@ -135,7 +132,7 @@ class Model:
 
                 # Get predictions and calculate an accuracy
                 predictions = self.output_layer_activation.predictions(
-                                  output)
+                    output)
                 accuracy = self.accuracy.calculate(predictions,
                                                    batch_y)
 
@@ -148,14 +145,11 @@ class Model:
                     self.optimizer.update_params(layer)
                 self.optimizer.post_update_params()
 
-
                 # Print a summary
                 if not step % print_every or step == train_steps - 1:
                     print(f'step: {step}, ' +
                           f'acc: {accuracy:.3f}, ' +
-                          f'loss: {loss:.3f} (' +
-                          f'data_loss: {data_loss:.3f}, ' +
-                          f'reg_loss: {regularization_loss:.3f}), ' +
+                          f'loss: {loss:.3f} ' +
                           f'lr: {self.optimizer.current_learning_rate}')
 
             # Get and print epoch loss and accuracy
@@ -167,14 +161,11 @@ class Model:
 
             print(f'training, ' +
                   f'acc: {epoch_accuracy:.3f}, ' +
-                  f'loss: {epoch_loss:.3f} (' +
-                  f'data_loss: {epoch_data_loss:.3f}, ' +
-                  f'reg_loss: {epoch_regularization_loss:.3f}), ' +
+                  f'loss: {epoch_loss:.3f} ' +
                   f'lr: {self.optimizer.current_learning_rate}')
 
             # If there is the validation data
             if validation_data is not None:
-
                 # Evaluate the model:
                 self.evaluate(*validation_data,
                               batch_size=batch_size)
@@ -199,7 +190,6 @@ class Model:
         self.loss.new_pass()
         self.accuracy.new_pass()
 
-
         # Iterate over steps
         for step in range(validation_steps):
 
@@ -212,11 +202,11 @@ class Model:
             # Otherwise slice a batch
             else:
                 batch_X = X_val[
-                    step*batch_size:(step+1)*batch_size
-                ]
+                          step * batch_size:(step + 1) * batch_size
+                          ]
                 batch_y = y_val[
-                    step*batch_size:(step+1)*batch_size
-                ]
+                          step * batch_size:(step + 1) * batch_size
+                          ]
 
             # Perform the forward pass
             output = self.forward(batch_X, training=False)
@@ -226,7 +216,7 @@ class Model:
 
             # Get predictions and calculate an accuracy
             predictions = self.output_layer_activation.predictions(
-                              output)
+                output)
             self.accuracy.calculate(predictions, batch_y)
 
         # Get and print validation loss and accuracy
@@ -234,7 +224,7 @@ class Model:
         validation_accuracy = self.accuracy.calculate_accumulated()
 
         # Print a summary
-        print(f'validation, ' +
+        print(f'test, ' +
               f'acc: {validation_accuracy:.3f}, ' +
               f'loss: {validation_loss:.3f}')
 
@@ -267,7 +257,7 @@ class Model:
 
             # Otherwise slice a batch
             else:
-                batch_X = X[step*batch_size:(step+1)*batch_size]
+                batch_X = X[step * batch_size:(step + 1) * batch_size]
 
             # Perform the forward pass
             batch_output = self.forward(batch_X, training=False)
@@ -294,7 +284,6 @@ class Model:
         # "layer" is now the last object from the list,
         # return its output
         return layer.output
-
 
     # Performs backward pass
     def backward(self, output, y):
@@ -343,7 +332,6 @@ class Model:
 
         # Return a list
         return parameters
-
 
     # Updates the model with new parameters
     def set_parameters(self, parameters):
@@ -394,7 +382,6 @@ class Model:
         # Open a file in the binary-write mode and save the model
         with open(path, 'wb') as f:
             pickle.dump(model, f)
-
 
     # Loads and returns a model
     @staticmethod

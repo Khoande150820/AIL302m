@@ -11,6 +11,7 @@ class Accuracy:
 
         # Get comparison results
         comparisons = self.compare(predictions, y)
+
         # Calculate an accuracy
         accuracy = np.mean(comparisons)
 
@@ -36,7 +37,6 @@ class Accuracy:
         self.accumulated_count = 0
 
 
-
 # Accuracy calculation for classification model
 class Accuracy_Categorical(Accuracy):
 
@@ -52,7 +52,6 @@ class Accuracy_Categorical(Accuracy):
     def compare(self, predictions, y):
         if not self.binary and len(y.shape) == 2:
             y = np.argmax(y, axis=1)
-
         return predictions == y
 
 
