@@ -106,34 +106,4 @@ class Layer_Input:
 
 
 
-class Layer_Dropout:
-    def __init__(self, rate):
-        # Store rate, invert to get success rate
-        self.rate = 1 - rate
 
-    # Forward
-    def forward(self, inputs, training):
-        # Save input value
-        self.inputs = inputs
-
-        # If not in training mode, return values
-        if not training:
-            self.output = inputs.copy()
-            return
-
-        # Generate and save scaled mask
-        self.binary_mask = np.random.binomial(1, self.rate, size= inputs.shape)/ self.rate
-
-        # Apply mask to output values
-        self.output = inputs*self.binary_mask
-
-    # Backward
-    def backward(self, dvalues):
-        # Gradients on value
-        self.dinputs = dvalues * self.binary_mask
-
-
-class Layer_Input:
-    # Forward pass
-    def forward(self, inputs, training):
-        self.output = inputs
